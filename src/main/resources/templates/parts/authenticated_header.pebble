@@ -1,0 +1,19 @@
+<div class="col-4">
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link" href="/profile">{{ current.nickname }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/friends?id={{ current.id }}">Friends{% if incomingRequestsFlag %} <b style="color:red;" id="incomingFriendsRequests">({{ incomingRequests }})</b> {% endif %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/dialogs">Dialogs</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/profile/id{{ current.id }}/posts">Posts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-secondary" href="/logout">Logout</a>
+        </li>
+    </ul>
+</div>

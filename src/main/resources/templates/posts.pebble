@@ -1,0 +1,48 @@
+{% extends "parts/authenticated_base" %}
+{% block title %} Posts of {{ user.nickname }} {% endblock %}
+{% block content %}
+    {% for post in posts %}
+        <div class="container border rounded my-2" >
+            <a href="/profile/id{{ post.writerId }}"><b>{{ post.writerNickname }}:</b></a><br>
+            <p>{{ post.text }}</p>
+            <i>{{ post.postDate }} at {{ post.hour }}:{{ post.minute }}</i><br>
+            {% if post.isLiked %}
+                <input type="button" value="Dislike" class="btn btn-danger mb-1" id="button{{ post.id }}"
+                       onclick="action({{ post.id }})">
+            {% else %}
+                <input type="button" value="Like" class="btn btn-success mb-1" id="button{{ post.id }}"
+                       onclick="action({{ post.id }})">
+            {% endif %}
+            <a href="/post{{ post.id }}/likers" id="likers{{ post.id }}" class="mb-1">Likers ({{ post.likersCount }})</a><br>
+        </div>
+    {% endfor %}
+    {#        <script src="../static/js/jquery.js"></script>#}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        function action(id) {
+            var clickedButton = document.getElementById("button" + id);
+            var likersPost = document.getElementById("likers" + id);
+            if (clickedButton.value === "Like") {
+                $.ajax({
+                    url: "/post" + id + "/like",
+                    type: "post",
+                    success: function (data) {
+                        likersPost.innerText = "Likers (" + data + ")";
+                        clickedButton.value = "Dislike";
+                        clickedButton.classList.replace("btn-success", "btn-danger");
+                    }
+                })
+            } else {
+                $.ajax({
+                    url: "/post" + id + "/dislike",
+                    type: "post",
+                    success: function (data) {
+                        likersPost.innerText = "Likers (" + data + ")";
+                        clickedButton.value = "Like";
+                        clickedButton.classList.replace("btn-danger", "btn-success");
+                    }
+                })
+            }
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "parts/authenticated_base" %}
+{% block title %} Profile {% endblock %}
+{% block content %}
+    {#<div style="display: grid; grid-template-rows: 1fr 1fr 1fr 1fr 1fr; grid-template-columns: 1fr 1fr">#}
+    <div>
+        <h3>{{ user.nickname }}</h3>
+
+        <p>Information about user:</p>
+        <p>User's id is <b>{{ user.id }}</b></p>
+        <p>Status <b>{{ user.status }}</b></p>
+
+        {% if(current.id==user.id) %}
+            <form action="/profile/updateInformation" method="get">
+                <input type="submit" value="Update information" class="btn btn-info">
+            </form>
+        {% endif %}
+
+        <a href="/friends?id={{ user.id }}">Список братишек {% if incomingRequestsFlag %} <b
+                    style="color:red;">({{ incomingRequests }})</b> {% endif %}</a><br>
+        {% if(visiablePosts) %}
+            <a href="/profile/id{{ user.id }}/posts">Posts</a>
+        {% endif %}
+        {% if(current.id==user.id) %}
+            {#        <a href="/dialogs">Диалоги</a>#}
+            <form action="/profile/newPost" method="get">
+                <input type="submit" value="New Post" class="btn btn-info">
+            </form>
+        {% else %}
+            <a href="/dialogs/getChatWithFriend?friend-id={{ user.id }}">
+                <button class="btn btn-success">Chat</button>
+            </a>
+        {% endif %}
+
+    </div>
+{% endblock %}

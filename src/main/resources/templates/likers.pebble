@@ -1,0 +1,8 @@
+{% extends "parts/authenticated_base" %}
+{% block title %} Likers of post {{ post.id }} {% endblock %}
+{% block content %}
+    <h3>Likers of post {{ post.id }}</h3>
+    {% for liker in likers %}
+        <a href="/profile/id{{ liker.id }}">{{ liker.nickname }}</a><br>
+    {% endfor %}
+{% endblock %}

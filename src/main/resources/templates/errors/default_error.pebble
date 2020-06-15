@@ -1,0 +1,9 @@
+{% extends "parts/base" %}
+{% block content %}
+    <div class="mx-auto my-auto">
+        <h2>Something went wrong</h2>
+        <form action="/" method="get">
+            <input type="submit" value="Go to main page" class="btn btn-info">
+        </form>
+    </div>
+{% endblock %}

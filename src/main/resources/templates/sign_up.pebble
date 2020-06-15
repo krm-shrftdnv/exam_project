@@ -1,0 +1,105 @@
+{% extends "parts/unauthenticated_base" %}
+{% block title %} Sign up {% endblock %}
+{% block content %}
+    <div class="col-10">
+        <h3>Sign Up</h3>
+        <form action="/signUp" method="post">
+            <div class="form-group">
+                <span class="error" style="color: red">{{ error }}</span><br>
+
+                <label for="nickname">Enter nickname:</label>
+                <input type="text" required name="nickname" id="nickname" class="form-control" placeholder="nickname">
+
+                <label for="email">Enter email:</label>
+                <input type="text" required name="email" id="email" class="form-control" placeholder="email">
+                <small id="emailMsg"></small>
+
+                <label for="password">Enter password:</label>
+                <input type="password" required name="password" id="password" class="form-control"
+                       placeholder="password">
+
+                <label for="repeated">Repeat password</label>
+                <input type="password" required name="repeated" id="repeated" class="form-control"
+                       placeholder="repeat password">
+                <small id="passwordMsg"></small><br>
+
+                <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+
+                <label for="date">Enter your birth date:</label>
+                <input type="date" id="date" required name="birthday" class="form-control">
+
+                <label for="status">Choose your social status:</label>
+                <select name="status" id="status" class="form-control">
+                    <option selected>UNDECIDED</option>
+                    <option>SINGLE</option>
+                    <option>RELATIONSHIPS</option>
+                    <option>MARRIED</option>
+                    <option>SEARCHING</option>
+                </select><br>
+
+                <input type="submit" id="submit" value="Save" class="btn btn-success">
+            </div>
+        </form>
+    </div>
+    {#        <script src="../static/js/jquery.js"></script>#}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        var email = document.getElementById("email");
+        var emailMessage = document.getElementById("emailMsg");
+        var password = document.getElementById("password");
+        var repeated = document.getElementById("repeated");
+        var submit = document.getElementById("submit")
+        var passwordMessage = document.getElementById("passwordMsg");
+        var sameMessage = "Passwords are same";
+        var differentMessage = "Passwords should be same";
+
+        document.addEventListener("DOMContentLoaded", ready);
+
+        function ready() {
+            repeated.oninput = checkPasswordMatch;
+            password.oninput = checkPasswordMatch;
+            email.onchange = checkEmailAvailability;
+        }
+
+        function checkPasswordMatch() {
+            if (password.value.length > 0 && repeated.value.length > 0) {
+                passwordMessage.style.display = "block";
+                if (password.value !== repeated.value) {
+                    passwordMessage.style.color = "red";
+                    passwordMessage.innerHTML = differentMessage;
+                    submit.setAttribute("type", "button");
+                } else {
+                    passwordMessage.style.color = "green";
+                    passwordMessage.innerHTML = sameMessage;
+                    submit.setAttribute("type", "submit");
+                }
+            } else {
+                passwordMessage.style.display = "none";
+            }
+        }
+
+        function checkEmailAvailability() {
+            $.ajax({
+                url: "/checkEmailAvailability?email=" + email.value,
+                type: "get",
+                success: function (data) {
+                    if (email.value.length > 0) {
+                        emailMessage.style.display = "block";
+                        if (data) {
+                            emailMessage.style.color = "green";
+                            emailMessage.innerText = "Email is available.";
+                            submit.setAttribute("type", "submit");
+                        } else {
+                            emailMessage.style.color = "red";
+                            emailMessage.innerText = "Email is already registered.";
+                            submit.setAttribute("type", "button");
+                        }
+                    } else {
+                        emailMessage.style.display = "none";
+                    }
+                }
+            })
+        }
+
+    </script>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "parts/authenticated_base" %}
+{% block title %}
+    Get friends
+{% endblock %}
+{% block content %}
+    <h3>Get friends</h3>
+    {% for user in users %}
+        <div class="row">
+            <div class="col">
+                <a href="/profile/id{{ user.id }}">{{ user.nickname }}</a>
+            </div>
+            <div class="col">
+                <form action="/friends/startFriendship?receiver-id={{ user.id }}" method="post">
+                    <input type="submit" class="btn btn-primary" value="Add">
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

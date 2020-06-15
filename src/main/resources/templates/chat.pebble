@@ -1,0 +1,69 @@
+{% extends "parts/authenticated_base" %}
+{% block title %}Chat{% endblock %}
+{% block script %}
+    {#        <script src="../static/js/jquery.js"></script>#}
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous">
+    </script>
+
+    <script>
+        var webSocket;
+
+        function connect() {
+            webSocket = new WebSocket('ws://localhost/websockets');
+
+            document.cookie = 'X-Authorization=' + '123456' + ';path=/';
+
+            webSocket.onmessage = function receiveMessage(response) {
+                let data = response['data'];
+                let json = JSON.parse(data);
+                $('#messagesList').prepend("<li class=\"border round my-1 mr-4\"><b class='mx-2'>" + json['writerNickname'] + "</b><br><p class='mx-1'>" + json['text'] + "</p><small class='mx-1'><i>" + json['date'] + "</i></small>")
+            }
+        }
+
+        function sendMessage(writerId, writerNickname, dialogId) {
+            var text = document.getElementById('inputArea').value;
+            if (text.length > 0) {
+                var date = new Date();
+                date.setTime(Date.now());
+                let message = {
+                    "text": text,
+                    "writerId": writerId,
+                    "writerNickname": writerNickname,
+                    "dialogId": dialogId,
+                    "date": date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' at ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+                }
+                webSocket.send(JSON.stringify(message));
+                $("#inputArea").val('');
+            }
+        }
+    </script>
+{% endblock %}
+{% block bodyOnload %} onload="connect()"{% endblock %}
+{% block content %}
+    {#    <form action="/chat{{ dialog.id }}/sendMessage" method="post">#}
+    <div class="container form-group">
+        <h3>Chat with <a href="/profile/id{{ other.id }}" style="color: black">{{ other.nickname }}</a></h3>
+        <textarea placeholder="Enter new message..." id="inputArea" name="text" class="form-control"></textarea>
+        <button class="btn btn-success"
+                onclick="sendMessage('{{ current.id }}', '{{ current.nickname }}', '{{ dialog.id }}')">Send
+        </button>
+        {#            <input type="submit" value="Send" class="btn btn-success">#}
+    </div>
+    {#    </form>#}
+    <div class="container">
+        <ul style="list-style: none; display: block; height: 350px; overflow-y: scroll; scroll-behavior: smooth;"
+            class="border border-dark " id="messagesList">
+            {% for message in messages %}
+                <li class="border rounded my-1 mr-4">
+                    <b class="mx-2">{{ message.writerNickname }}</b><br>
+                    <p class="mx-1">{{ message.text }}</p>
+                    <small class="mx-1"><i>{{ message.date }} at {{ message.hour }}:{{ message.minute }}
+                            :{{ message.second }}</i></small>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

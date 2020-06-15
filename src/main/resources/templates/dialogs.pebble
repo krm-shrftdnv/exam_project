@@ -1,0 +1,12 @@
+{% extends "parts/authenticated_base" %}
+{% block title %} Dialogs {% endblock %}
+{% block content %}
+    <h3>Dialogs</h3>
+    {% for dialog in dialogs %}
+        {% if(current.id!=dialog.member1id) %}
+            <a href="/dialogs/getChatWithFriend?friend-id={{ dialog.member1id }}"><h5>{{ dialog.member1nickname }}</h5></a><br>
+        {% else %}
+            <a href="/dialogs/getChatWithFriend?friend-id={{ dialog.member2id }}"><h5>{{ dialog.member2nickname }}</h5></a><br>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

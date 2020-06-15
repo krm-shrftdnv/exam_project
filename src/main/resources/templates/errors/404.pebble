@@ -1,0 +1,5 @@
+{% extends "parts/base" %}
+{% block content %}
+<h2>Page not found!</h2>
+    <a href="/" class="btn btn-info">Go to main page</a>
+{% endblock %}

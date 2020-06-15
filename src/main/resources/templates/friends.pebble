@@ -1,0 +1,46 @@
+{% extends "parts/authenticated_base" %}
+{% block title %}
+    Friends of {{ user.nickname }}
+{% endblock %}
+{% block content %}
+    <h3>Friends of <a href="/profile/id{{ user.id }}" style="color: black">{{ user.nickname }}</a></h3>
+    {% for friend in friends %}
+        <div id="friend{{ friend.id }}">
+            <a href="/profile/id{{ friend.id }}">{{ friend.nickname }}</a><br>
+            <a href="/dialogs/getChatWithFriend?friend-id={{ friend.id }}">
+                <button class="btn btn-success btn-sm">Chat</button>
+            </a>
+                {% if(current.id==user.id) %}
+                    <input type="button" value="Delete friend" class="btn btn-sm btn-danger"
+                           id="deleteButton{{ friend.id }}" onclick="deleteFriend({{ friend.id }})">
+                {% endif %}
+            {#        <a href="/dialogs/getChat?friend-id={{ friend.id }}">Write a message</a>#}
+        </div><br>
+    {% endfor %}
+    {% if(current.id==user.id) %}
+        {% if( noFriends ) %}
+            <p>You might have no friends now, go to users list to get them!</p>
+        {% endif %}
+        <form action="/friends/getNewFriends" method="get">
+            <input type="submit" value="Get new friends" class="btn btn-info">
+        </form>
+        <a href="/friends/toConfirm">Incoming Requests {% if incomingRequestsFlag %} <b
+                    style="color:red;" id="incomingRequests">({{ incomingRequests }})</b> {% endif %}</a><br>
+        <a href="/friends/sentRequests">Outgoing Requests</a>
+    {% endif %}
+    {#        <script src="../static/js/jquery.js"></script>#}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        function deleteFriend(id) {
+            $.ajax({
+                url: "/friends/breakFriendship?friend-id=" + id,
+                type: "post",
+                success: function (data) {
+                    document.getElementById("friend" + id).style.display = "none";
+                    document.getElementById("incomingRequests").innerText = "(" + data + ")";
+                    document.getElementById("incomingFriendsRequests").innerText = "(" + data + ")";
+                }
+            })
+        }
+    </script>
+{% endblock %}

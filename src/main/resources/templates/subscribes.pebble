@@ -1,0 +1,25 @@
+{% extends "parts/authenticated_base" %}
+{% block title %} Subscribes {% endblock %}
+{% block content %}
+    {% for user in users %}
+        <div id="subscribe{{ user.id }}">
+            <a href="/profile/id{{ user.id }}">{{ user.nickname }}</a>
+            <form action="/friends/breakFriendship?friend-id={{ user.id }}" method="post">
+                <input type="button" value="Delete subscription" class="btn btn-danger" onclick="deleteRequest({{ user.id }})">
+            </form>
+        </div>
+    {% endfor %}
+    {#        <script src="../static/js/jquery.js"></script>#}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        function deleteRequest(id) {
+            $.ajax({
+                url: "/friends/breakFriendship?friend-id="+id,
+                type: "post",
+                success: function () {
+                    document.getElementById("subscribe"+id).style.display = "none";
+                }
+            })
+        }
+    </script>
+{% endblock %}

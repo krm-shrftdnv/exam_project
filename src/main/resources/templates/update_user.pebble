@@ -1,0 +1,27 @@
+{% extends "parts/authenticated_base" %}
+{% block title %}Update{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <form action="/users/updateUser" method="post">
+                <div class="form-group">
+                    <label for="nickname">Enter your new nickname, <i>{{ current.nickname }}</i>:</label>
+                    <input type="text" name="nickname" class="form-control" placeholder="nickname" id="nickname">
+
+                    <label for="status">Choose your status:</label>
+                    <select name="status" id="status" class="form-control">
+                        <option selected>UNDECIDED</option>
+                        <option>SINGLE</option>
+                        <option>RELATIONSHIPS</option>
+                        <option>MARRIED</option>
+                        <option>SEARCHING</option>
+                    </select>
+                </div>
+                <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+                <input type="submit" value="Save" class="btn btn-success">
+            </form>
+        </div>
+        <div class="col-3"></div>
+    </div>
+{% endblock %}

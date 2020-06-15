@@ -1,0 +1,25 @@
+{% extends "parts/authenticated_base" %}
+{% block title %} Subscribers {% endblock %}
+{% block content %}
+    {% for user in users %}
+        <div id="request{{ user.id }}">
+        <form action="/friends/confirmFriendship?sender-id={{ user.id }}" method="post">
+            <a href="/profile/id{{ user.id }}">{{ user.nickname }}</a>
+            <input type="button" value="Add" class="btn btn-success" onclick="addFriend({{ user.id }})">
+        </form>
+        </div>
+    {% endfor %}
+    {#        <script src="../static/js/jquery.js"></script>#}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        function addFriend(id) {
+            $.ajax({
+                url: "/friends/confirmFriendship?sender-id="+id,
+                type: "post",
+                success: function () {
+                    document.getElementById("request"+id).style.display = "none";
+                }
+            })
+        }
+    </script>
+{% endblock %}

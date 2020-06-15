@@ -1,0 +1,8 @@
+{% extends "parts/authenticated_base" %}
+{% block title %}No such profile{% endblock %}
+{% block content %}
+    <h3>User with such id does not exist</h3>
+    <form action="/profile" method="get">
+        <input type="submit" value="Go to your profile">
+    </form>
+{% endblock %}

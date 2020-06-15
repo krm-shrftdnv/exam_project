@@ -1,0 +1,4 @@
+{% extends "parts/base" %}
+{% block header %}
+    {% include "parts/authenticated_header" %}
+{% endblock %}

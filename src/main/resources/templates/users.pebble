@@ -1,0 +1,75 @@
+{% extends "parts/authenticated_base" %}
+{% block title %} Users {% endblock %}
+{% block content %}
+    <table id="users">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Account status</th>
+            <th>User role</th>
+        </tr>
+        {% for user in users %}
+            <tr>
+                <th><p>{{ user.id }}</p></th>
+                <th><p>{{ user.nickname }}</p></th>
+                <th><a href="">{{ user.email }}</a></th>
+                <th>
+                    <p id="status{{ user.id }}">{{ user.state }}</p>
+                    {% if(user.state == "NOT_CONFIRMED") %}
+                        <input type="hidden" value="{{ user.id }}" class="user-id">
+                        <input type="submit" class="confirm" id="confirm{{ user.id }}" value="Confirm"
+                               onclick="confirm({{ user.id }})">
+                    {% endif %}
+                </th>
+                <th>
+                    {% if(current.role=="ADMIN") %}
+                        <select id="role" onchange="changeRole({{ user.id }}, this.value)">
+                            <option {% if (user.role=="USER") %} selected {% endif %}>USER</option>
+                            <option {% if (user.role=="MODERATOR") %} selected {% endif %}>MODERATOR</option>
+                            <option {% if (user.role=="ADMIN") %} selected {% endif %}>ADMIN</option>
+                        </select>
+                        {#                        <input type="submit" class="change" value="Change" onclick="changeRole({{ user.id }}, $('#role').val())">#}
+                    {% else %}
+                        <p>{{ user.role }}</p>
+                    {% endif %}
+                </th>
+                {% if(current.role=="ADMIN") %}
+                    <th>
+                        <form action="/users/{{ user.id }}/delete" method="post">
+                            <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+                            <input type="submit" value="Delete">
+                        </form>
+                    </th>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+    <span id="success_change_message" hidden style="color: limegreen">Role was changed</span>
+    {#        <script src="../static/js/jquery.js"></script>#}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        function confirm(id) {
+            $.ajax({
+                url: "/users/confirm?user-id=" + id,
+                type: "get",
+                dataType: "text",
+                success: function () {
+                    document.getElementById("status" + id).innerText = "CONFIRMED";
+                    document.getElementById("confirm" + id).style.display = "none";
+                }
+            })
+        }
+
+        function changeRole(id, role) {
+            $.ajax({
+                url: "/users/changeRole?role=" + role + "&user-id=" + id,
+                type: "get",
+                dataType: "text",
+                success: function () {
+                    $("#success_change_message").removeAttr("hidden");
+                }
+            })
+        }
+    </script>
+{% endblock %}

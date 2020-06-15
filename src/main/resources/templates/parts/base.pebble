@@ -1,0 +1,38 @@
+<html lang="en">
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
+    <style>
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    {% block style %}{% endblock %}
+    {% block script %}{% endblock %}
+</head>
+<body {% block bodyOnload %}{% endblock %}>
+<header>
+    <div class="row mt-2">
+        <div class="col-4"></div>
+        {#        <div class="col-4"><img src="/img/postbook_logo.png" class="img-fluid" alt="postbook"></div>#}
+        {% block header %} {% endblock %}
+    </div>
+</header>
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6" style="margin-top: 50px">
+        {% block content %}{% endblock %}
+    </div>
+    <div class="col-3"></div>
+</div>
+
+{#<footer>#}
+{#    <div class="text-center" style="position: absolute; margin-bottom: 0" >#}
+{#        <p>developed by KFU, itis, 11-804.</p>#}
+{#    </div>#}
+{#</footer>#}
+</body>
+</html>

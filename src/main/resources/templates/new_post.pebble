@@ -1,0 +1,12 @@
+{% extends "parts/authenticated_base" %}
+{% block title %}New Post{% endblock %}
+{% block content %}
+    <h3>New Post</h3>
+    <form action="/profile/newPost" method="post">
+        <div class="form-group">
+            <label for="text">Write your new post:</label>
+            <textarea name="text" placeholder="Write your post here" id="text" class="form-control"></textarea><br>
+            <input type="submit" value="Publish" class="btn btn-info">
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,5 @@
+{% extends "parts/base" %}
+{% block content %}
+<h2>You shouldn't be here!</h2>
+    <a href="/" class="btn btn-info">Get out!</a>
+{% endblock %}
