@@ -47,8 +47,6 @@ public class PostsServiceImpl implements PostsService {
         Post post = postsRepository.findById(postId).get();
         post.getLikers().add(liker);
         liker.getFavorites().add(post);
-        postsRepository.save(post);
-        usersRepository.save(liker);
     }
 
     @Transactional

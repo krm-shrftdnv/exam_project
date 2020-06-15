@@ -50,8 +50,6 @@ public class FriendshipRequestServiceImpl implements FriendshipRequestService {
         friendshipRequestRepository.delete(friendshipRequest);
         sender.getFriends().add(receiver);
         receiver.getFriends().add(sender);
-        usersRepository.save(sender);
-        usersRepository.save(receiver);
         return true;
     }
 

@@ -75,7 +75,6 @@ public class FriendsServiceImpl implements FriendsService {
             User breaker = usersRepository.findById(breakerId).get();
             User friend = usersRepository.findById(friendId).get();
             breaker.getFriends().remove(friend);
-            usersRepository.save(breaker);
             friendshipRequestService.sendFriendshipRequest(friend.getId(), breaker.getId());
             return true;
         }
@@ -88,7 +87,6 @@ public class FriendsServiceImpl implements FriendsService {
         List<User> users = usersRepository.findAll();
         users.remove(current);
         List<FriendshipRequest> outgoingRequests = friendshipRequestRepository.findAllBySender_id(id);
-        List<FriendshipRequest> incomingRequests = friendshipRequestRepository.findAllByReceiver_id(id);
         for(FriendshipRequest request : outgoingRequests){
             users.remove(request.getReceiver());
         }
